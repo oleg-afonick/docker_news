@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load tz %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no justify-content-between"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>News Portal</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400">
+</head>
+<body style="background-color: #ecf0f3; margin: 32px">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container" style="width: 800px">
+        <a class="navbar-brand" href="/"><span style="color: #039BE5; ">News Portal</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Main</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Publications</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">News +</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Article +</a>
+                </li>
+                <li class="nav-item active">
+                    {% if request.user.is_superuser %}
+                        <a class="nav-link" href="/admin/">Admin panel</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container" style="width: 450px">
+        <div class="navbar-collapse collapse" id="navbarNav">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item active">
+                    &ensp;
+                </li>
+                <li class="nav-item active">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link"><span style="color: orangered;">{{ request.user.username }}</span></a>
+                    {% endif %}
+                </li>
+                <li class="nav-item active">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href="#">Profile</a>
+                    {% else %}
+                        <a class="nav-link" href='#'>Login</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item active">
+                    {% if not user.is_authenticated %}
+                        <a class="nav-link" href='#'>Signup</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item active">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href='#'>Logout</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center flexContainer" style="background-color: rgba(0, 0, 0, 0.0);">
+            <br>
+            {% block content %}
+            {% endblock content %}
+            {% if page_obj.has_other_pages %}
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                {% endif %}
+                {% for p in paginator.page_range %}
+                    {% if page_obj.number == p %}
+                        <a class="disabled" style="color: #888; text-decoration: none;">{{ p }}</a>
+                    {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                        <a class="page-num">
+                            <a href="?page={{ p }}">{{ p }}</a>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
